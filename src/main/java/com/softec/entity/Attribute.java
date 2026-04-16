@@ -46,6 +46,15 @@ public class Attribute {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Attribute{" +
+                "name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     public String getName() {
         return name;
     }

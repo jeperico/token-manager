@@ -52,13 +52,8 @@ public class Origin {
             return this;
         }
 
-        public Builder firstExpertise(Expertise expertise) {
-            this.expertises.set(0, expertise);
-            return this;
-        }
-
-        public Builder secondExpertise(Expertise expertise) {
-            this.expertises.set(1, expertise);
+        public Builder addExpertise(Expertise expertise) {
+            this.expertises.add(expertise);
             return this;
         }
 
@@ -72,9 +67,20 @@ public class Origin {
             return this;
         }
 
-        public Origin build(Builder builder) {
+        public Origin build() {
             return new Origin(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Origin{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", expertises=" + expertises +
+                ", powerName='" + powerName + '\'' +
+                ", powerDescription='" + powerDescription + '\'' +
+                '}';
     }
 
     public String getName() {

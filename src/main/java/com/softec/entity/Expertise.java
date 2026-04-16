@@ -25,9 +25,9 @@ public class Expertise {
     public static class Builder {
         private String name;
         private Attribute baseAttribute;
-        private boolean trainedOnly;
-        private boolean chargePenalty;
-        private boolean kitNeeded;
+        private boolean trainedOnly = false;
+        private boolean chargePenalty = false;
+        private boolean kitNeeded = false;
 
         public Builder name(String name) {
             this.name = name;
@@ -39,24 +39,35 @@ public class Expertise {
             return this;
         }
 
-        public Builder trainedOnly(boolean trainedOnly) {
-            this.trainedOnly = trainedOnly;
+        public Builder trainedOnly() {
+            this.trainedOnly = true;
             return this;
         }
 
-        public Builder chargePenalty(boolean chargePenalty) {
-            this.chargePenalty = chargePenalty;
+        public Builder chargePenalty() {
+            this.chargePenalty = true;
             return this;
         }
 
-        public Builder kitNeeded(boolean kitNeeded) {
-            this.kitNeeded = kitNeeded;
+        public Builder kitNeeded() {
+            this.kitNeeded = true;
             return this;
         }
 
         public Expertise build() {
             return new Expertise(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Expertise{" +
+                "name='" + name + '\'' +
+                ", baseAttribute=" + baseAttribute +
+                ", trainedOnly=" + trainedOnly +
+                ", chargePenalty=" + chargePenalty +
+                ", kitNeeded=" + kitNeeded +
+                '}';
     }
 
     public String getName() {
