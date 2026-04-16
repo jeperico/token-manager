@@ -20,6 +20,8 @@ help:
 	@echo "  make migrate     - Run database migrations"
 	@echo "  make db-shell    - Open PostgreSQL shell"
 	@echo "  make db-reset    - Reset database (WARNING: deletes all data)"
+	@echo "  make db-view     - View all database data"
+	@echo "  make db-clean-duplicates - Remove duplicate base_status entries"
 	@echo ""
 	@echo "Development Commands:"
 	@echo "  make build       - Build the Java application"
@@ -94,12 +96,47 @@ db-shell:
 	@echo "Opening PostgreSQL shell..."
 	docker exec -it token_manager_db psql -U postgres -d token_manager
 
+# View database data
+db-view:
+	@echo "=== ATTRIBUTES ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT * FROM attribute LIMIT 30;"
+	@echo ""
+	@echo "=== EXPERTISES ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT id, name, base_attribute_id FROM expertise ORDER BY id LIMIT 30;"
+	@echo ""
+	@echo "=== BASE STATUS ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT * FROM base_status LIMIT 30;"
+	@echo ""
+	@echo "=== ROLES ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT id, name, base_expertises, base_status_id FROM role LIMIT 30;"
+	@echo ""
+	@echo "=== ORIGINS ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT id, name, power_name FROM origin LIMIT 30;"
+	@echo ""
+	@echo "=== TOKENS ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT * FROM token LIMIT 30;"
+
+# Clean duplicate base_status entries
+db-clean-duplicates:
+	@echo "Cleaning duplicate base_status entries..."
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "\
+		DELETE FROM base_status a USING base_status b \
+		WHERE a.id > b.id \
+		AND a.hp_base = b.hp_base \
+		AND a.hp_level = b.hp_level \
+		AND a.ep_base = b.ep_base \
+		AND a.ep_level = b.ep_level \
+		AND a.san_base = b.san_base \
+		AND a.san_level = b.san_level;"
+	@echo "Duplicates removed!"
+
+
 # Reset database
 db-reset:
 	@echo "WARNING: This will delete all data!"
-	@read -p "Are you sure? [y/N] " -n 1 -r; \
-	echo; \
-	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+	@echo "Are you sure? [y/N]"
+	@read answer; \
+	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
 		docker-compose down -v; \
 		docker-compose up -d; \
 		echo "Database reset complete!"; \
