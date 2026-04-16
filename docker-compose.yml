@@ -1,0 +1,62 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: token_manager_db
+    environment:
+      POSTGRES_DB: token_manager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - token_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: token_manager_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - token_network
+    depends_on:
+      - postgres
+
+  # Java Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: token_manager_app
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/token_manager
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    networks:
+      - token_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  token_network:
+    driver: bridge
