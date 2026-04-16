@@ -8,6 +8,7 @@ public class Token {
     private int nex;
     private final List<Expertise> expertises = new ArrayList<>(5);
     private Origin origin;
+    private Role role;
 
     public Token(Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
@@ -22,10 +23,14 @@ public class Token {
         if (builder.origin.getName().isEmpty()) {
             throw new IllegalArgumentException("Token origin name cannot be empty");
         }
+        if (builder.role == null) {
+            throw new IllegalArgumentException("Token role cannot be null");
+        }
 
         this.name = builder.name;
         this.nex = builder.nex;
         this.origin = builder.origin;
+        this.role = builder.role;
         this.expertises.addAll(builder.expertises);
     }
 
@@ -34,6 +39,7 @@ public class Token {
         private int nex;
         private final List<Expertise> expertises = new ArrayList<>(5);
         private Origin origin;
+        private Role role;
 
         public Builder name(String name) {
             this.name = name;
@@ -56,6 +62,11 @@ public class Token {
             return this;
         }
 
+        public Builder role(Role role) {
+            this.role = role;
+            return this;
+        }
+
         public Token build() {
             return new Token(this);
         }
@@ -68,6 +79,7 @@ public class Token {
                 ", nex=" + nex +
                 ", expertises=" + expertises +
                 ", origin=" + origin +
+                ", role=" + role +
                 '}';
     }
 
@@ -101,5 +113,13 @@ public class Token {
 
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
