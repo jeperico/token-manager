@@ -1,5 +1,6 @@
 package com.softec.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class BaseStatus {
@@ -38,6 +39,18 @@ public class BaseStatus {
         this.epLevel = builder.epLevel;
         this.sanBase = builder.sanBase;
         this.sanLevel = builder.sanLevel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseStatus baseStatus = (BaseStatus) o;
+        return Objects.equals(id, baseStatus.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static class Builder {
@@ -98,29 +111,5 @@ public class BaseStatus {
 
     public UUID getId() {
         return id;
-    }
-
-    public int getHpBase() {
-        return hpBase;
-    }
-
-    public int getHpLevel() {
-        return hpLevel;
-    }
-
-    public int getEpBase() {
-        return epBase;
-    }
-
-    public int getEpLevel() {
-        return epLevel;
-    }
-
-    public int getSanBase() {
-        return sanBase;
-    }
-
-    public int getSanLevel() {
-        return sanLevel;
     }
 }

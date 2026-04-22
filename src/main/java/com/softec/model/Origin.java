@@ -2,15 +2,18 @@ package com.softec.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Origin {
     private final UUID id;
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
+    private final String powerName;
+    private final String powerDescription;
+
+    // BUSINESS RULE: AN ORIGIN MUST BE ONLY 2 EXPERTISES
     private final List<Expertise> expertises = new ArrayList<>(2);
-    private String powerName;
-    private String powerDescription;
 
     public Origin(Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
@@ -36,6 +39,18 @@ public class Origin {
         this.expertises.add(builder.expertises.getLast());
         this.powerName = builder.powerName;
         this.powerDescription = builder.powerDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Origin origin = (Origin) o;
+        return Objects.equals(id, origin.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static class Builder {
@@ -91,22 +106,6 @@ public class Origin {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public List<Expertise> getExpertises() {
         return expertises;
     }
@@ -116,21 +115,5 @@ public class Origin {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
         this.expertises.set(index, expertise);
-    }
-
-    public String getPowerName() {
-        return powerName;
-    }
-
-    public void setPowerName(String powerName) {
-        this.powerName = powerName;
-    }
-
-    public String getPowerDescription() {
-        return powerDescription;
-    }
-
-    public void setPowerDescription(String powerDescription) {
-        this.powerDescription = powerDescription;
     }
 }

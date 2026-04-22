@@ -2,15 +2,16 @@ package com.softec.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Token {
     private final UUID id;
-    private String name;
-    private int nex;
+    private final String name;
+    private final int nex;
     private final List<Expertise> expertises = new ArrayList<>(5);
-    private UUID originId;
-    private UUID roleId;
+    private final UUID originId;
+    private final UUID roleId;
 
     public Token(Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
@@ -29,6 +30,18 @@ public class Token {
         this.originId = builder.originId;
         this.roleId = builder.roleId;
         this.expertises.addAll(builder.expertises);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return Objects.equals(id, token.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static class Builder {
@@ -79,47 +92,5 @@ public class Token {
                 ", originId=" + originId +
                 ", roleId=" + roleId +
                 '}';
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getNex() {
-        return nex;
-    }
-
-    public void setNex(int nex) {
-        this.nex = nex;
-    }
-
-    public List<Expertise> getExpertises() {
-        return expertises;
-    }
-
-    public void addExpertise(Expertise expertise) {
-        this.expertises.add(expertise);
-    }
-
-    public UUID getOrigin() {
-        return originId;
-    }
-
-    public void setOrigin(Origin origin) { this.originId = origin.getId(); }
-
-    public UUID getRole() {
-        return roleId;
-    }
-
-    public void setRole(Role role) {
-        this.roleId = role.getId();
     }
 }

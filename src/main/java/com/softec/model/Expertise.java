@@ -1,5 +1,6 @@
 package com.softec.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Expertise {
@@ -24,6 +25,18 @@ public class Expertise {
         this.trainedOnly = builder.trainedOnly;
         this.chargePenalty = builder.chargePenalty;
         this.kitNeeded = builder.kitNeeded;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Expertise expertise = (Expertise) o;
+        return Objects.equals(id, expertise.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static class Builder {
@@ -73,45 +86,5 @@ public class Expertise {
                 ", chargePenalty=" + chargePenalty +
                 ", kitNeeded=" + kitNeeded +
                 '}';
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public UUID getBaseAttributeId() {
-        return baseAttributeId;
-    }
-
-    public void setBaseAttributeId(UUID baseAttributeId) {
-        this.baseAttributeId = baseAttributeId;
-    }
-
-    public boolean isTrainedOnly() {
-        return trainedOnly;
-    }
-
-    public void setTrainedOnly(boolean trainedOnly) {
-        this.trainedOnly = trainedOnly;
-    }
-
-    public boolean isChargePenalty() {
-        return chargePenalty;
-    }
-
-    public void setChargePenalty(boolean chargePenalty) {
-        this.chargePenalty = chargePenalty;
-    }
-
-    public boolean isKitNeeded() {
-        return kitNeeded;
-    }
-
-    public void setKitNeeded(boolean kitNeeded) {
-        this.kitNeeded = kitNeeded;
     }
 }

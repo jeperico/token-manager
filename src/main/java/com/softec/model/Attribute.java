@@ -1,12 +1,13 @@
 package com.softec.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Attribute {
     private final UUID id;
     private final String name;
     private final String shortName;
-    private String description;
+    private final String description;
 
     public Attribute (Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
@@ -23,6 +24,18 @@ public class Attribute {
         this.name = builder.name;
         this.shortName = builder.shortName;
         this.description = builder.description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Attribute attribute = (Attribute) o;
+        return Objects.equals(id, attribute.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static class Builder {
@@ -58,23 +71,5 @@ public class Attribute {
                 ", shortName='" + shortName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() { return name; }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
