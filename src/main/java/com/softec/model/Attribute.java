@@ -1,6 +1,9 @@
-package com.softec.entity;
+package com.softec.model;
+
+import java.util.UUID;
 
 public class Attribute {
+    private final UUID id;
     private final String name;
     private final String shortName;
     private String description;
@@ -16,6 +19,7 @@ public class Attribute {
             throw new IllegalArgumentException("Attribute description cannot be null or blank");
         }
 
+        this.id = UUID.randomUUID();
         this.name = builder.name;
         this.shortName = builder.shortName;
         this.description = builder.description;
@@ -49,15 +53,18 @@ public class Attribute {
     @Override
     public String toString() {
         return "Attribute{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", shortName='" + shortName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
 
-    public String getName() {
-        return name;
+    public UUID getId() {
+        return id;
     }
+
+    public String getName() { return name; }
 
     public String getShortName() {
         return shortName;

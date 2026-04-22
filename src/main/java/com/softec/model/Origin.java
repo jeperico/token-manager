@@ -1,9 +1,11 @@
-package com.softec.entity;
+package com.softec.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Origin {
+    private final UUID id;
     private String name;
     private String description;
     private final List<Expertise> expertises = new ArrayList<>(2);
@@ -27,6 +29,7 @@ public class Origin {
             throw new IllegalArgumentException("Origin powerDescription cannot be null or empty");
         }
 
+        this.id = UUID.randomUUID();
         this.name = builder.name;
         this.description = builder.description;
         this.expertises.add(builder.expertises.getFirst());
@@ -75,12 +78,17 @@ public class Origin {
     @Override
     public String toString() {
         return "Origin{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", expertises=" + expertises +
                 ", powerName='" + powerName + '\'' +
                 ", powerDescription='" + powerDescription + '\'' +
                 '}';
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {

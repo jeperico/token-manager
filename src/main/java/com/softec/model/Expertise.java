@@ -1,8 +1,11 @@
-package com.softec.entity;
+package com.softec.model;
+
+import java.util.UUID;
 
 public class Expertise {
+    private final UUID id;
     private final String name;
-    private Attribute baseAttribute;
+    private UUID baseAttributeId;
     private boolean trainedOnly;
     private boolean chargePenalty;
     private boolean kitNeeded;
@@ -15,8 +18,9 @@ public class Expertise {
             throw new IllegalArgumentException("Expertise baseAttribute cannot be null");
         }
 
+        this.id = UUID.randomUUID();
         this.name = builder.name;
-        this.baseAttribute = builder.baseAttribute;
+        this.baseAttributeId = builder.baseAttribute;
         this.trainedOnly = builder.trainedOnly;
         this.chargePenalty = builder.chargePenalty;
         this.kitNeeded = builder.kitNeeded;
@@ -24,7 +28,7 @@ public class Expertise {
 
     public static class Builder {
         private String name;
-        private Attribute baseAttribute;
+        private UUID baseAttribute;
         private boolean trainedOnly = false;
         private boolean chargePenalty = false;
         private boolean kitNeeded = false;
@@ -35,7 +39,7 @@ public class Expertise {
         }
 
         public Builder baseAttribute(Attribute baseAttribute) {
-            this.baseAttribute = baseAttribute;
+            this.baseAttribute = baseAttribute.getId();
             return this;
         }
 
@@ -62,24 +66,29 @@ public class Expertise {
     @Override
     public String toString() {
         return "Expertise{" +
-                "name='" + name + '\'' +
-                ", baseAttribute=" + baseAttribute +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", baseAttributeId=" + baseAttributeId +
                 ", trainedOnly=" + trainedOnly +
                 ", chargePenalty=" + chargePenalty +
                 ", kitNeeded=" + kitNeeded +
                 '}';
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public Attribute getBaseAttribute() {
-        return baseAttribute;
+    public UUID getBaseAttributeId() {
+        return baseAttributeId;
     }
 
-    public void setBaseAttribute(Attribute baseAttribute) {
-        this.baseAttribute = baseAttribute;
+    public void setBaseAttributeId(UUID baseAttributeId) {
+        this.baseAttributeId = baseAttributeId;
     }
 
     public boolean isTrainedOnly() {

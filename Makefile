@@ -84,20 +84,50 @@ db-view:
 	@echo "=== ATTRIBUTES ==="
 	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT * FROM attribute LIMIT 30;"
 	@echo ""
-	@echo "=== EXPERTISES ==="
-	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT id, name, base_attribute_id FROM expertise ORDER BY id LIMIT 30;"
+	@echo "=== EXPERTISES (with Attribute) ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "\
+		SELECT e.id, e.name, a.short_name as attribute, e.trained_only, e.charge_penalty, e.kit_needed \
+		FROM expertise e \
+		JOIN attribute a ON e.base_attribute_id = a.id \
+		ORDER BY e.name LIMIT 30;"
 	@echo ""
 	@echo "=== BASE STATUS ==="
 	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT * FROM base_status LIMIT 30;"
 	@echo ""
-	@echo "=== ROLES ==="
-	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT id, name, base_expertises, base_status_id FROM role LIMIT 30;"
+	@echo "=== ROLES (with Status & Expertises) ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "\
+		SELECT r.id, r.name, r.base_expertises, \
+		       CONCAT('HP:', bs.hp_base, '+', bs.hp_level, ' EP:', bs.ep_base, '+', bs.ep_level, ' SAN:', bs.san_base, '+', bs.san_level) as status, \
+		       STRING_AGG(e.name, ', ') as expertises \
+		FROM role r \
+		JOIN base_status bs ON r.base_status_id = bs.id \
+		LEFT JOIN role_expertise re ON r.id = re.role_id \
+		LEFT JOIN expertise e ON re.expertise_id = e.id \
+		GROUP BY r.id, r.name, r.base_expertises, bs.hp_base, bs.hp_level, bs.ep_base, bs.ep_level, bs.san_base, bs.san_level \
+		ORDER BY r.name LIMIT 30;"
 	@echo ""
-	@echo "=== ORIGINS ==="
-	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT id, name, power_name FROM origin LIMIT 30;"
+	@echo "=== ORIGINS (with Expertises) ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "\
+		SELECT o.id, o.name, o.power_name, \
+		       STRING_AGG(e.name, ', ') as expertises \
+		FROM origin o \
+		LEFT JOIN origin_expertise oe ON o.id = oe.origin_id \
+		LEFT JOIN expertise e ON oe.expertise_id = e.id \
+		GROUP BY o.id, o.name, o.power_name \
+		ORDER BY o.name LIMIT 30;"
 	@echo ""
-	@echo "=== TOKENS ==="
-	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "SELECT * FROM token LIMIT 30;"
+	@echo "=== TOKENS (with Origin, Role & Expertises) ==="
+	@docker exec -it token_manager_db psql -U postgres -d token_manager -c "\
+		SELECT t.id, t.name, t.nex, \
+		       o.name as origin, r.name as role, \
+		       STRING_AGG(e.name, ', ') as expertises \
+		FROM token t \
+		JOIN origin o ON t.origin_id = o.id \
+		JOIN role r ON t.role_id = r.id \
+		LEFT JOIN token_expertise te ON t.id = te.token_id \
+		LEFT JOIN expertise e ON te.expertise_id = e.id \
+		GROUP BY t.id, t.name, t.nex, o.name, r.name \
+		ORDER BY t.name LIMIT 30;"
 
 # Clean duplicate base_status entries
 db-clean-duplicates:

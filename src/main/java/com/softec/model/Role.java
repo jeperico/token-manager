@@ -1,9 +1,11 @@
-package com.softec.entity;
+package com.softec.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Role {
+    private final UUID id;
     private String name;
     private String proficiencies;
     private final List<Expertise> expertises = new ArrayList<>(2);
@@ -27,6 +29,7 @@ public class Role {
             throw new IllegalArgumentException("Role status cannot be null");
         }
 
+        this.id = UUID.randomUUID();
         this.name = builder.name;
         this.proficiencies = builder.proficiencies;
         this.expertises.addAll(builder.expertises);
@@ -74,12 +77,17 @@ public class Role {
     @Override
     public String toString() {
         return "Role{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", proficiencies='" + proficiencies + '\'' +
                 ", expertises=" + expertises +
                 ", baseExpertises=" + baseExpertises +
                 ", status=" + status +
                 '}';
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {

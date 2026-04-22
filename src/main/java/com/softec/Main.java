@@ -3,7 +3,7 @@ package com.softec;
 import com.softec.data.ExpertiseData;
 import com.softec.data.OriginData;
 import com.softec.data.RoleData;
-import com.softec.entity.Token;
+import com.softec.model.Token;
 
 public class Main {
     public static void main(String[] args) {

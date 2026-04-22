@@ -1,14 +1,16 @@
-package com.softec.entity;
+package com.softec.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Token {
+    private final UUID id;
     private String name;
     private int nex;
     private final List<Expertise> expertises = new ArrayList<>(5);
-    private Origin origin;
-    private Role role;
+    private UUID originId;
+    private UUID roleId;
 
     public Token(Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
@@ -20,17 +22,12 @@ public class Token {
         if (builder.expertises.isEmpty()) {
             throw new IllegalArgumentException("Token expertises cannot be empty");
         }
-        if (builder.origin.getName().isEmpty()) {
-            throw new IllegalArgumentException("Token origin name cannot be empty");
-        }
-        if (builder.role == null) {
-            throw new IllegalArgumentException("Token role cannot be null");
-        }
 
+        this.id = UUID.randomUUID();
         this.name = builder.name;
         this.nex = builder.nex;
-        this.origin = builder.origin;
-        this.role = builder.role;
+        this.originId = builder.originId;
+        this.roleId = builder.roleId;
         this.expertises.addAll(builder.expertises);
     }
 
@@ -38,8 +35,8 @@ public class Token {
         private String name;
         private int nex;
         private final List<Expertise> expertises = new ArrayList<>(5);
-        private Origin origin;
-        private Role role;
+        private UUID originId;
+        private UUID roleId;
 
         public Builder name(String name) {
             this.name = name;
@@ -57,13 +54,13 @@ public class Token {
         }
 
         public Builder origin(Origin origin) {
-            this.origin = origin;
+            this.originId = origin.getId();
             this.expertises.addAll(origin.getExpertises());
             return this;
         }
 
         public Builder role(Role role) {
-            this.role = role;
+            this.roleId = role.getId();
             return this;
         }
 
@@ -75,12 +72,17 @@ public class Token {
     @Override
     public String toString() {
         return "Token{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", nex=" + nex +
                 ", expertises=" + expertises +
-                ", origin=" + origin +
-                ", role=" + role +
+                ", originId=" + originId +
+                ", roleId=" + roleId +
                 '}';
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {
@@ -107,19 +109,17 @@ public class Token {
         this.expertises.add(expertise);
     }
 
-    public Origin getOrigin() {
-        return origin;
+    public UUID getOrigin() {
+        return originId;
     }
 
-    public void setOrigin(Origin origin) {
-        this.origin = origin;
-    }
+    public void setOrigin(Origin origin) { this.originId = origin.getId(); }
 
-    public Role getRole() {
-        return role;
+    public UUID getRole() {
+        return roleId;
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.roleId = role.getId();
     }
 }

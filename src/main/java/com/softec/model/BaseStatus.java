@@ -1,6 +1,9 @@
-package com.softec.entity;
+package com.softec.model;
+
+import java.util.UUID;
 
 public class BaseStatus {
+    private final UUID id;
     private final int hpBase;
     private final int hpLevel;
     private final int epBase;
@@ -28,6 +31,7 @@ public class BaseStatus {
             throw new IllegalArgumentException("SAN level cannot be negative");
         }
 
+        this.id = UUID.randomUUID();
         this.hpBase = builder.hpBase;
         this.hpLevel = builder.hpLevel;
         this.epBase = builder.epBase;
@@ -82,13 +86,18 @@ public class BaseStatus {
     @Override
     public String toString() {
         return "BaseStatus{" +
-                "hpBase=" + hpBase +
+                "id='" + id + '\'' +
+                ", hpBase=" + hpBase +
                 ", hpLevel=" + hpLevel +
                 ", epBase=" + epBase +
                 ", epLevel=" + epLevel +
                 ", sanBase=" + sanBase +
                 ", sanLevel=" + sanLevel +
                 '}';
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public int getHpBase() {
