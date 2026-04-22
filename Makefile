@@ -1,4 +1,4 @@
-.PHONY: help build up down restart logs clean test migrate db-shell pgadmin rebuild status
+.PHONY: help up down restart logs clean migrate db-shell pgadmin pgadmin-wsl rebuild status
 
 # Default target
 help:
@@ -6,33 +6,29 @@ help:
 	@echo "===================================="
 	@echo ""
 	@echo "Docker Commands:"
-	@echo "  make up          - Start all services (PostgreSQL + pgAdmin + App)"
-	@echo "  make down        - Stop all services"
-	@echo "  make restart     - Restart all services"
-	@echo "  make rebuild     - Rebuild and restart all services"
-	@echo "  make logs        - View logs from all services"
-	@echo "  make logs-app    - View application logs"
-	@echo "  make logs-db     - View database logs"
-	@echo "  make logs-pgadmin - View pgAdmin logs"
-	@echo "  make status      - Show status of all services"
+	@echo "  make up                  - Start all services (PostgreSQL + pgAdmin)"
+	@echo "  make down                - Stop all services"
+	@echo "  make restart             - Restart all services"
+	@echo "  make rebuild             - Rebuild and restart all services"
+	@echo "  make status              - Show status of all services"
+	@echo ""
+	@echo "Docker logs:"
+	@echo "  make logs                - View logs from all services"
+	@echo "  make logs-db             - View database logs"
+	@echo "  make logs-pgadmin        - View pgAdmin logs"
 	@echo ""
 	@echo "Database Commands:"
-	@echo "  make migrate     - Run database migrations"
-	@echo "  make db-shell    - Open PostgreSQL shell"
-	@echo "  make db-reset    - Reset database (WARNING: deletes all data)"
-	@echo "  make db-view     - View all database data"
+	@echo "  make db-view             - View all database data"
+	@echo "  make migrate             - Run database migrations"
+	@echo "  make db-shell            - Open PostgreSQL shell"
+	@echo "  make db-reset            - Reset database (WARNING: deletes all data)"
 	@echo "  make db-clean-duplicates - Remove duplicate base_status entries"
 	@echo ""
 	@echo "Development Commands:"
-	@echo "  make build       - Build the Java application"
-	@echo "  make test        - Run tests"
-	@echo "  make clean       - Clean build artifacts and Docker volumes"
-	@echo "  make pgadmin     - Open pgAdmin in browser"
 	@echo ""
 	@echo "Utility Commands:"
-	@echo "  make ps          - List running containers"
-	@echo "  make exec-app    - Execute bash in app container"
-	@echo "  make exec-db     - Execute bash in database container"
+	@echo "  make pgadmin             - Open pgAdmin in browser"
+	@echo "  make exec-db             - Execute bash in database container"
 
 # Start all services
 up:
@@ -61,9 +57,6 @@ rebuild:
 logs:
 	docker-compose logs -f
 
-logs-app:
-	docker-compose logs -f app
-
 logs-db:
 	docker-compose logs -f postgres
 
@@ -73,16 +66,6 @@ logs-pgadmin:
 # Show status
 status:
 	docker-compose ps
-
-# Build application
-build:
-	@echo "Building Java application..."
-	mvn clean package
-
-# Run tests
-test:
-	@echo "Running tests..."
-	mvn test
 
 # Run migrations
 migrate:
@@ -144,13 +127,6 @@ db-reset:
 		echo "Cancelled."; \
 	fi
 
-# Clean everything
-clean:
-	@echo "Cleaning build artifacts and Docker volumes..."
-	mvn clean
-	docker-compose down -v
-	@echo "Clean complete!"
-
 # Open pgAdmin in browser
 pgadmin:
 	@echo "Opening pgAdmin in browser..."
@@ -158,42 +134,13 @@ pgadmin:
 	which open > /dev/null && open http://localhost:5050 || \
 	echo "Please open http://localhost:5050 in your browser"
 
-# List containers
-ps:
-	docker-compose ps
-
-# Execute bash in app container
-exec-app:
-	docker exec -it token_manager_app /bin/sh
+# Open pgAdmin in browser on WSL
+pgadmin-wsl:
+	@echo "Opening pgAdmin in browser..."
+	@cmd.exe /c start http://localhost:5050 2>/dev/null || \
+	powershell.exe -Command "Start-Process http://localhost:5050" 2>/dev/null || \
+	echo "Please open http://localhost:5050 in your browser"
 
 # Execute bash in database container
 exec-db:
 	docker exec -it token_manager_db /bin/bash
-
-# Install dependencies
-install:
-	@echo "Installing dependencies..."
-	mvn dependency:resolve
-
-# Run application locally (without Docker)
-run-local:
-	@echo "Running application locally..."
-	mvn exec:java -Dexec.mainClass="com.softec.Main"
-
-# Package application
-package:
-	@echo "Packaging application..."
-	mvn package -DskipTests
-
-# Development mode - watch for changes
-dev:
-	@echo "Starting development mode..."
-	docker-compose up --build
-
-# Quick start (build + up)
-start: build up
-	@echo "Application started successfully!"
-
-# Full reset and restart
-reset: clean up migrate
-	@echo "Full reset complete!"

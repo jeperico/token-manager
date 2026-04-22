@@ -1,6 +1,6 @@
 # Token Manager - Docker Setup
 
-This project is fully dockerized with PostgreSQL, pgAdmin, and the Java application.
+This project is dockerized with PostgreSQL and pgAdmin.
 
 ## Prerequisites
 
@@ -12,22 +12,24 @@ This project is fully dockerized with PostgreSQL, pgAdmin, and the Java applicat
 ### 1. Start all services
 
 ```bash
-docker-compose up -d
+make up
 ```
 
 This will start:
-- PostgreSQL on port 5432
+- PostgreSQL on port 5433
 - pgAdmin on port 5050
-- Java application
 
 ### 2. Access pgAdmin
 
-Open your browser and go to:
+``` bash
+make pgadmin
 ```
-http://localhost:5050
+or
+``` bash
+make pgadmin-wsl
 ```
 
-**Login credentials:**
+**Base login credentials:**
 - Email: `admin@admin.com`
 - Password: `password`
 
@@ -54,41 +56,9 @@ The database is automatically initialized with the migration scripts on first ru
 
 ## Useful Commands
 
-### View logs
 ```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f postgres
-docker-compose logs -f app
-docker-compose logs -f pgadmin
-```
-
-### Stop services
-```bash
-docker-compose down
-```
-
-### Stop and remove volumes (clean slate)
-```bash
-docker-compose down -v
-```
-
-### Rebuild application
-```bash
-docker-compose up -d --build app
-```
-
-### Access PostgreSQL directly
-```bash
-docker exec -it token_manager_db psql -U postgres -d token_manager
-```
-
-### Run migrations manually
-```bash
-docker exec -i token_manager_db psql -U postgres -d token_manager < src/main/resources/migrations/V1__create_base_tables.sql
-docker exec -i token_manager_db psql -U postgres -d token_manager < src/main/resources/migrations/V2__insert_base_data.sql
+# See all commands available
+make help
 ```
 
 ## Environment Variables
@@ -108,7 +78,7 @@ PGADMIN_PASSWORD=admin
 
 ## Ports
 
-- **5432** - PostgreSQL
+- **5433** - PostgreSQL
 - **5050** - pgAdmin
 
 ## Volumes
@@ -119,46 +89,3 @@ PGADMIN_PASSWORD=admin
 ## Network
 
 All services run on the `token_network` bridge network, allowing them to communicate using service names.
-
-## Troubleshooting
-
-### Database not initialized
-```bash
-docker-compose down -v
-docker-compose up -d
-```
-
-### Can't connect to database from pgAdmin
-- Make sure to use `postgres` as the host (not `localhost`)
-- Check that all services are running: `docker-compose ps`
-
-### Application fails to start
-```bash
-# Check logs
-docker-compose logs app
-
-# Rebuild
-docker-compose up -d --build app
-```
-
-## Development Workflow
-
-1. Make changes to your code
-2. Rebuild and restart the app:
-   ```bash
-   docker-compose up -d --build app
-   ```
-3. View logs:
-   ```bash
-   docker-compose logs -f app
-   ```
-
-## Production Considerations
-
-For production, update:
-- Change default passwords
-- Use environment variables for sensitive data
-- Add volume backups
-- Configure proper logging
-- Add health checks
-- Use secrets management

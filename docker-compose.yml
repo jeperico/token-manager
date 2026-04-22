@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5433"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./src/main/resources/migrations:/docker-entrypoint-initdb.d
@@ -36,22 +36,6 @@ services:
       - token_network
     depends_on:
       - postgres
-
-  # Java Application
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: token_manager_app
-    environment:
-      DB_URL: jdbc:postgresql://postgres:5432/token_manager
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-    networks:
-      - token_network
-    depends_on:
-      postgres:
-        condition: service_healthy
 
 volumes:
   postgres_data:
