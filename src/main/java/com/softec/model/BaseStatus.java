@@ -112,4 +112,28 @@ public class BaseStatus {
     public UUID getId() {
         return id;
     }
+
+    public int getHpBase() {
+        return hpBase;
+    }
+
+    public int getHpLevel() {
+        return hpLevel;
+    }
+
+    public int getEpBase() {
+        return epBase;
+    }
+
+    public int getEpLevel() {
+        return epLevel;
+    }
+
+    public int getSanBase() {
+        return sanBase;
+    }
+
+    public int getSanLevel() {
+        return sanLevel;
+    }
 }

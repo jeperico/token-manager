@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
-    private static final String URL = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://postgres:5432/token_manager");
+    private static final String URL = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://localhost:5433/token_manager?ssl=false");
     private static final String USER = System.getenv().getOrDefault("DB_USER", "postgres");
     private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "postgres");
 
@@ -19,7 +19,18 @@ public class ConnectionFactory {
         return SingletonHelper.INSTANCE;
     }
 
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection getConnection() {
+        int retries = 3;
+
+        while (retries > 0) {
+            try {
+                return DriverManager.getConnection(URL, USER, PASSWORD);
+            } catch (SQLException e) {
+                retries--;
+                try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+            }
+        }
+
+        throw new RuntimeException("Failed to connect to DB");
     }
 }

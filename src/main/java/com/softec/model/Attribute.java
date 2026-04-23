@@ -9,6 +9,22 @@ public class Attribute {
     private final String shortName;
     private final String description;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public Attribute (Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
             throw new IllegalArgumentException("Attribute name cannot be null or blank");

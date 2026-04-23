@@ -6,10 +6,10 @@ import java.util.UUID;
 public class Expertise {
     private final UUID id;
     private final String name;
-    private UUID baseAttributeId;
-    private boolean trainedOnly;
-    private boolean chargePenalty;
-    private boolean kitNeeded;
+    private final UUID baseAttributeId;
+    private final boolean trainedOnly;
+    private final boolean chargePenalty;
+    private final boolean kitNeeded;
 
     public Expertise(Builder builder) {
         if (builder.name == null || builder.name.isEmpty()) {
@@ -56,8 +56,18 @@ public class Expertise {
             return this;
         }
 
+        public Builder baseAttributeId(UUID baseAttributeId) {
+            this.baseAttribute = baseAttributeId;
+            return this;
+        }
+
         public Builder trainedOnly() {
             this.trainedOnly = true;
+            return this;
+        }
+
+        public Builder trainedOnly(boolean trainedOnly) {
+            this.trainedOnly = trainedOnly;
             return this;
         }
 
@@ -66,8 +76,18 @@ public class Expertise {
             return this;
         }
 
+        public Builder chargePenalty(boolean chargePenalty) {
+            this.chargePenalty = chargePenalty;
+            return this;
+        }
+
         public Builder kitNeeded() {
             this.kitNeeded = true;
+            return this;
+        }
+
+        public Builder kitNeeded(boolean kitNeeded) {
+            this.kitNeeded = kitNeeded;
             return this;
         }
 
@@ -86,5 +106,29 @@ public class Expertise {
                 ", chargePenalty=" + chargePenalty +
                 ", kitNeeded=" + kitNeeded +
                 '}';
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UUID getBaseAttributeId() {
+        return baseAttributeId;
+    }
+
+    public boolean isTrainedOnly() {
+        return trainedOnly;
+    }
+
+    public boolean isChargePenalty() {
+        return chargePenalty;
+    }
+
+    public boolean isKitNeeded() {
+        return kitNeeded;
     }
 }

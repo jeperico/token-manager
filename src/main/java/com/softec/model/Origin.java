@@ -116,4 +116,20 @@ public class Origin {
         }
         this.expertises.set(index, expertise);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPowerName() {
+        return powerName;
+    }
+
+    public String getPowerDescription() {
+        return powerDescription;
+    }
 }

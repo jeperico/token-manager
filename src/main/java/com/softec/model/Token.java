@@ -93,4 +93,28 @@ public class Token {
                 ", roleId=" + roleId +
                 '}';
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNex() {
+        return nex;
+    }
+
+    public List<Expertise> getExpertises() {
+        return expertises;
+    }
+
+    public UUID getOriginId() {
+        return originId;
+    }
+
+    public UUID getRoleId() {
+        return roleId;
+    }
 }

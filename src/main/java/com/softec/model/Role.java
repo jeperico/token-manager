@@ -103,4 +103,24 @@ public class Role {
     public UUID getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProficiencies() {
+        return proficiencies;
+    }
+
+    public List<Expertise> getExpertises() {
+        return expertises;
+    }
+
+    public int getBaseExpertises() {
+        return baseExpertises;
+    }
+
+    public UUID getBaseStatusId() {
+        return baseStatusId;
+    }
 }

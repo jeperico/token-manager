@@ -1,40 +1,20 @@
 package com.softec;
 
-import com.softec.data.ExpertiseData;
-import com.softec.data.OriginData;
-import com.softec.data.RoleData;
-import com.softec.model.Token;
+import com.softec.dao.AttributeDAO;
+import com.softec.model.Attribute;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Token pc1 = new Token.Builder()
-                .name("Afonso")
-                .nex(15)
-                .origin(OriginData.FIGHTER)
-                .role(RoleData.COMBATANT)
-                .addExpertise(ExpertiseData.REFLEXES)
-                .build();
+        try {
+            AttributeDAO attributeDAO = new AttributeDAO();
+            List<Attribute> attributeList = attributeDAO.find();
 
-        Token pc2 = new Token.Builder()
-                .name("Shin")
-                .nex(35)
-                .origin(OriginData.MILITARY)
-                .role(RoleData.OCCULTIST)
-                .addExpertise(ExpertiseData.INVESTIGATION)
-                .addExpertise(ExpertiseData.TACTICS)
-                .addExpertise(ExpertiseData.WILL)
-                .build();
-
-        Token pc3 = new Token.Builder()
-                .name("Kira")
-                .nex(25)
-                .origin(OriginData.TI)
-                .role(RoleData.SPECIALIST)
-                .addExpertise(ExpertiseData.CRIME)
-                .build();
-
-        System.out.println(pc1);
-        System.out.println(pc2);
-        System.out.println(pc3);
+            System.out.println(attributeList);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
