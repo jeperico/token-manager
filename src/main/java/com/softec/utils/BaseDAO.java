@@ -9,11 +9,12 @@ import java.util.UUID;
 
 public interface BaseDAO<T> {
     default Connection conn() throws SQLException {
-        return ConnectionFactory.getInstance().getConnection();
+        return ConnectionFactory.getConnection();
     }
 
     boolean save(T data);
-    List<T> find();
+    List<T> findAll();
+    T findById(UUID id);
     boolean remove(UUID id);
     boolean edit(T data);
 }

@@ -36,7 +36,7 @@ public class Attribute {
             throw new IllegalArgumentException("Attribute description cannot be null or blank");
         }
 
-        this.id = UUID.randomUUID();
+        this.id = builder.id != null ? builder.id : UUID.randomUUID();
         this.name = builder.name;
         this.shortName = builder.shortName;
         this.description = builder.description;
@@ -55,9 +55,15 @@ public class Attribute {
     }
 
     public static class Builder {
+        private UUID id;
         private String name;
         private String shortName;
         private String description;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder name(String name) {
             this.name = name;

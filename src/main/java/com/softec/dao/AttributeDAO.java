@@ -20,28 +20,13 @@ public class AttributeDAO implements BaseDAO<Attribute> {
 
     @Override
     public boolean save(Attribute data) {
-        String query = "INSERT INTO attribute (name, short_name, description) VALUES (?, ?, ?)";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(query);
-
-            stmt.setString(1, data.getName());
-            stmt.setString(2, data.getShortName());
-            stmt.setString(3, data.getDescription());
-
-            stmt.execute();
-            stmt.close();
-            conn.close();
-            return true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return false;
     }
 
     @Override
-    public List<Attribute> find() {
+    public List<Attribute> findAll() {
         List<Attribute> payload = new ArrayList<>();
-        String query = "SELECT name, short_name, description FROM attribute";
+        String query = "SELECT id, name, short_name, description FROM attribute";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -63,7 +48,6 @@ public class AttributeDAO implements BaseDAO<Attribute> {
 
             stmt.execute();
             stmt.close();
-            conn.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -71,21 +55,37 @@ public class AttributeDAO implements BaseDAO<Attribute> {
     }
 
     @Override
-    public boolean remove(UUID id) {
-        String query = "DELETE FROM attribute WHERE id = ?";
+    public Attribute findById(UUID id) {
+        String query = "SELECT id, name, short_name, description FROM attribute WHERE id = ?";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
-
             stmt.setString(1, String.valueOf(id));
+            ResultSet data = stmt.executeQuery();
+
+            UUID attributeId = (UUID) data.getObject("id");
+            String name = data.getString("name");
+            String shortName = data.getString("short_name");
+            String description = data.getString("description");
+
+            Attribute attribute = new Attribute.Builder()
+                    .id(attributeId)
+                    .name(name)
+                    .shortName(shortName)
+                    .description(description)
+                    .build();
 
             stmt.execute();
             stmt.close();
-            conn.close();
-            return true;
+            return attribute;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean remove(UUID id) {
+        return false;
     }
 
     @Override
